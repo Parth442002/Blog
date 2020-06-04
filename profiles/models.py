@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager, PermissionsMixin)
 from django.utils import timezone
+from django.db.models.signals import pre_save
 
 class UserManager(BaseUserManager):
     def create_user(self, email, username, password):
@@ -20,18 +21,27 @@ class UserManager(BaseUserManager):
     
     def create_superuser(self, email, username, password):
         user=self.create_user(email, username, password)
-        user.is_staff()
+        user.is_staff=True
         user.is_superuser = True
         user.save()
         return user
 
+
+
 class Profile(AbstractBaseUser,PermissionsMixin):
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=25, unique=True)
-    aboutme = models.CharField(max_length=140),
-    avatar = models.ImageField(blank=True, null=True,upload_to='avatars/')
-    birthday = models.DateField(blank=True)
-    last_online=models.DateTimeField()
+    aboutme = models.CharField(max_length=140,blank=True, null=True)
+    
+    GENDER_CHOICES = (
+    ('U','Undefined'),
+    ('F','Female'),
+    ('M','Male')
+                    )
+    gender=models.CharField(max_length=20,choices=GENDER_CHOICES)
+    avatar = models.ImageField(upload_to='avatars/',blank=True)
+    birthday = models.DateField(blank=True,null=True)
+    last_online=models.DateTimeField(blank=True,null=True)
     date_joined = models.DateTimeField(default=timezone.now)
     
     is_active = models.BooleanField(default=True)
@@ -43,6 +53,36 @@ class Profile(AbstractBaseUser,PermissionsMixin):
     
     def __str__(self):
         return "@{}".format(self.username)
+    
+    def is_online(self):
+        if self.last_online==timezone.now:
+            return True
+    
+    def post_save_avatar(self,sender, *args, **kwargs):
+        if not self.avatar:
+            if self.gender == 'M':
+                self.avatar="avatars/male.svg"
+            
+            elif self.gender=='F':
+                self.avatar='avatars/female.svg'
+
+            else:
+                instance.image = "avatars/default.svg"
+            print(self.gender)
+            pre_save.connect(post_save_avatar, sender=Profile)
+            
+    
+    
+    
+    
+
+
+    
+    
+    
+      
+
+            
     
 
     
