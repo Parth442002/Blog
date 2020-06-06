@@ -1,0 +1,24 @@
+{% extends '_base.html' %}
+
+{% block content %}
+<h2>Welcome to the registration page</h2>
+<form action="" method="POST">
+    {% csrf_token %}
+    {% include 'includes/b4form.html' with form=form %}
+    <img src="" alt="" srcset="" id='imgupload'>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+<script>
+function readFile() {
+  if (this.files && this.files[0]) {
+    var FR= new FileReader();
+    FR.onload = function(e) {
+      document.getElementById("imgupload").src = e.target.result;
+    };
+    FR.readAsDataURL( this.files[0] );
+  }
+}
+
+document.getElementById("id_avatar").addEventListener("change", readFile, false);
+</script>
+{% endblock content %}

@@ -1,0 +1,12 @@
+{% extends '../_base.html' %}
+
+{% block content %}
+<div class="container">
+  <h1>Login</h1>
+  <form action="" method="POST">
+    {% csrf_token %}
+    {% include 'includes/b4form.html' with form=form %}
+    <button type="submit" class="btn btn-primary">Submit</button>
+  </form>
+</div>
+{% endblock content %}

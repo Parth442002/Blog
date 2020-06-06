@@ -37,9 +37,21 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
+
+    #third party
+    'widget_tweaks',
+    'allauth',
+    'allauth.account',
 
     'profiles.apps.ProfilesConfig',
 ]
+SITE_ID=1
+AUTHENTICATION_BACKENDS=(
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+EMAIL_BACKEND='django.core.mail.backends.console.EmailBackend'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -105,6 +117,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
+
 # Internationalization
 # https://docs.djangoproject.com/en/3.0/topics/i18n/
 
@@ -130,3 +143,8 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 
 AUTH_USER_MODEL='profiles.Profile'
+
+ACCOUNT_LOGOUT_REDIRECT='home'
+LOGIN_REDIRECT_URL='home'
+ACCOUNT_SESSION_REMEMBER=True
+ACCOUNT_EMAIL_REQUIRED=True

@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import (AbstractBaseUser, BaseUserManager, PermissionsMixin)
 from django.utils import timezone
-from django.db.models.signals import pre_save
+from django.db.models.signals import pre_save,post_save
 
 class UserManager(BaseUserManager):
     def create_user(self, email, username, password):
@@ -39,7 +39,7 @@ class Profile(AbstractBaseUser,PermissionsMixin):
     ('M','Male')
                     )
     gender=models.CharField(max_length=20,choices=GENDER_CHOICES)
-    avatar = models.ImageField(upload_to='avatars/',blank=True)
+    avatar= models.ImageField(upload_to='avatars/',blank=True)
     birthday = models.DateField(blank=True,null=True)
     last_online=models.DateTimeField(blank=True,null=True)
     date_joined = models.DateTimeField(default=timezone.now)
@@ -57,19 +57,27 @@ class Profile(AbstractBaseUser,PermissionsMixin):
     def is_online(self):
         if self.last_online==timezone.now:
             return True
+    '''
+    def set_avatar(instance):
+        gender = instance.gender
+        if gender == 'Male':
+            avatar = 'avatars/male.svg'
+        elif gender=='Female':
+            avatar = 'avatars/female.svg'
+        else:
+            avatar='avatars/default.svg'
+        return avatar
     
-    def post_save_avatar(self,sender, *args, **kwargs):
-        if not self.avatar:
-            if self.gender == 'M':
-                self.avatar="avatars/male.svg"
-            
-            elif self.gender=='F':
-                self.avatar='avatars/female.svg'
+    def pre_save_avatar(instance, *args, **kwargs):
+        if not instance.avatar:
+            instance.avatar = set_avatar(instance)
+    
+    pre_save.connect(pre_save_avatar, sender=Profile)
+    '''
+    class Meta():
+        ordering = ['-date_joined']
 
-            else:
-                instance.image = "avatars/default.svg"
-            print(self.gender)
-            pre_save.connect(post_save_avatar, sender=Profile)
+    
             
     
     

@@ -1,0 +1,39 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'includes/navbar.css' %}">
+    
+    <link rel="stylesheet" href="{% static 'base.css' %}">
+    <title>{% block title %}{% endblock title %}</title>
+</head>
+<body>
+    {% include 'includes/navbar.html' %}
+    {% block content %}
+    {% if user.is_authenticated %}
+        <h1>username: {{user.username}}</h1>
+        <h2>email: {{user.email}}</h2>
+        <h3>bio: {{user.aboutme}}</h3>
+        <h4>birthdat: {{user.birthday}}</h4>
+        <h5>gender: {{user.gender}}</h5>
+        <h6>member since: {{user.date_joined}}</h6>
+        <h6>last online:{{user.last_online}}</h6>
+        {% if user.avatar %}
+        <img src="{{user.avatar.url}}" alt="">
+        {% endif %}
+    <a href="{% url 'account_logout' %}">Logout</a>
+    <a href="{% url 'register' %}">Register</a>
+    {% else %}
+    <h1>You are not logged in </h1>
+    <a href="{% url 'account_login' %}">Login</a>
+    {% endif %}
+    {% endblock content %}
+    {% include 'includes/footer.html' %}
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+</body>
+</html>

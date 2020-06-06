@@ -8,4 +8,4 @@ class LastOnlineMiddleware(object):
         assert hasattr(request, 'user'), 'The UpdateLastActivityMiddleware requires authentication middleware to be installed.'
         if request.user.is_authenticated():
             Profile.objects.filter(user__id=request.user.id) \
-                           .update(last_online=timezone.now())
+                           .update(last_online=timezone.now)
